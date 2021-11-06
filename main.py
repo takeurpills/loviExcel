@@ -1,3 +1,4 @@
+import datetime
 import argparse
 from reverseCombiner import reverseCombiner
 from openpyxl import load_workbook
@@ -7,7 +8,7 @@ input_file = "raw.xlsx"
 output_file = "new_" + input_file
 
 # Open workbook
-# workbook = load_workbook(filename="raw.xlsx", read_only=True)
+print(str(datetime.datetime.now()) + " " + f"Načítavam zošit: {input_file}")
 workbook = load_workbook(filename=input_file)
 
 # Get worksheets object, worksheet count for iterator
@@ -18,11 +19,8 @@ sheet_count = len(all_sheets)
 reference_sheet = workbook.worksheets[3]
 reference_sheet_length = len(reference_sheet["A"])
 
-# print(sheet_count)
-# print(reference_sheet.title)
-# print(reference_sheet_length)
-
 # Get list of rows to delete
+print(str(datetime.datetime.now()) + " " + "Vyhľadávam riadky na mazanie.")
 rows_list = []
 
 for row in range(reference_sheet_length, 3, -1):
@@ -32,10 +30,17 @@ for row in range(reference_sheet_length, 3, -1):
         rows_list.append(row)
 
 rows_tuple = reverseCombiner(rows_list)
-print(rows_tuple)
+print(
+    str(datetime.datetime.now())
+    + " "
+    + f"Nasledovné rozsahy riadkov budú vymazané: {rows_tuple}"
+)
 
 # Loop and delete
-for tuple in rows_tuple:
-    reference_sheet.delete_rows(tuple[0], tuple[1])
+for ws in range(3, sheet_count):
+    for tuple in rows_tuple:
+        workbook.worksheets[ws].delete_rows(tuple[0], tuple[1])
 
+# Save modified
+print(str(datetime.datetime.now()) + " " + "Ukladám upravený zošit.")
 workbook.save(output_file)
