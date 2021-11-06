@@ -4,7 +4,12 @@ from reverseCombiner import reverseCombiner
 from openpyxl import load_workbook
 from openpyxl.styles import Font
 
-input_file = "raw.xlsx"
+# Set up files
+parser = argparse.ArgumentParser()
+parser.add_argument("file", help="Treba zadať názov súboru na spracovanie", type=str)
+args = parser.parse_args()
+
+input_file = args.file
 output_file = "new_" + input_file
 
 # Open workbook
